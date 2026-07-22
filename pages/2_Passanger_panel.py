@@ -1,68 +1,79 @@
 import streamlit as st
-import streamlit.components.v1 as components
+import pandas as pd
+import pydeck as pdk
 
-st.set_page_config(page_title="Live GPS Passenger Panel", page_icon="🎒", layout="wide")
+st.set_page_config(page_title="Passenger Live Route Tracking", page_icon="🎒", layout="wide")
 
-st.title("🎒 Passenger Live GPS Radar & Auto-Matching")
-st.subheader("Automatic GPS Detection — Find nearby drivers within your 15km radius instantly.")
+st.title("🎒 Passenger Live Route & Vehicle Radar")
+st.subheader("Live tracking of all active vehicles from Sahiwal to Lahore along the entire route")
 
-# JavaScript component to fetch real device/browser GPS coordinates automatically
-st.markdown("### 📍 Your Live GPS Coordinates (Auto-Detected)")
+# Shared session state for active vehicles and requests
+if 'active_trips' not in st.session_state:
+    st.session_state.active_trips = [
+        {"id": "TRIP-01", "driver": "Muhammad Saleem", "vehicle": "Car 🚗", "origin": "Sahiwal", "destination": "Lahore", "progress": 35, "lat": 30.95, "lon": 73.50, "seats": 2, "fare": 1200},
+        {"id": "TRIP-02", "driver": "Tariq Mahmood", "vehicle": "Hiace 🚐", "origin": "Sahiwal", "destination": "Lahore", "progress": 60, "lat": 31.20, "lon": 73.80, "seats": 4, "fare": 900},
+    ]
 
-geo_script = """
-<div id="demo">Click the button below to fetch your live GPS location:</div>
-<button onclick="getLocation()" style="background-color:#2563EB; color:white; padding:10px 20px; border:none; border-radius:5px; cursor:pointer; font-weight:bold;">🛰️ Fetch My Live GPS Location</button>
+st.markdown("### 🌐 All Active Vehicles on Sahiwal ➔ Lahore Route")
 
-<script>
-var x = document.getElementById("demo");
-function getLocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(showPosition, showError);
-  } else {
-    x.innerHTML = "Geolocation is not supported by this browser.";
-  }
-}
+col1, col2 = st.columns([1, 1])
 
-function showPosition(position) {
-  x.innerHTML = "<b>Latitude:</b> " + position.coords.latitude + 
-                "<br><b>Longitude:</b> " + position.coords.longitude + 
-                " <span style='color:green; font-weight:bold;'>✔️ GPS Active & Locked!</span>";
-}
-
-function showError(error) {
-  switch(error.code) {
-    case error.PERMISSION_DENIED:
-      x.innerHTML = "User denied the request for Geolocation.";
-      break;
-    case error.POSITION_UNAVAILABLE:
-      x.innerHTML = "Location information is unavailable.";
-      break;
-    case error.TIMEOUT:
-      x.innerHTML = "The request to get user location timed out.";
-      break;
-    case error.UNKNOWN_ERROR:
-      x.innerHTML = "An unknown error occurred.";
-      break;
-  }
-}
-</script>
-"""
-components.html(geo_script, height=120)
-
-st.divider()
-
-st.markdown("### 🚗 Nearby Drivers Live Radar (Auto-Matched)")
-st.info("📡 GPS Radar Active: Scanning Sahiwal ➔ Sargodha ➔ Lahore Route...")
-
-# Simulated auto-detected live matching vehicles
-col1, col2 = st.columns(2)
 with col1:
-    st.success("🚗 *Car (Muhammad Saleem)\n *Distance from you:* 3.2 km away\n* *Speed:* 65 km/h (Approaching)\n* *Status:* Available (2 Seats Left)")
-    if st.button("Connect & Request Pickup"):
-        st.balloons()
-        st.success("✅ GPS Ping Sent to Driver! Driver's navigation updated with your live coordinates.")
+    st.markdown("#### 🚗 Select Vehicle to View Live Position")
+    trip_names = [f"{t['vehicle']} — Driver: {t['driver']} ({t['origin']} to {t['destination']})" for t in st.session_state.active_trips]
+    selected_trip_str = st.selectbox("Choose a live vehicle:", trip_names)
+    
+    selected_idx = trip_names.index(selected_trip_str)
+    trip = st.session_state.active_trips[selected_idx]
+    
+    covered = int((trip['progress'] / 100) * 170)
+    remaining = 170 - covered
+    
+    st.info(f"""
+    * *Driver Name:* {trip['driver']}
+    * *Vehicle Type:* {trip['vehicle']}
+    * *Covered Distance:* {covered} km from {trip['origin']}
+    * *Remaining Distance:* {remaining} km to {trip['destination']}
+    * *Available Seats:* {trip['seats']} | *Fare:* PKR {trip['fare']}
+    """)
+    
+    if st.button("🎫 Book Seat on this Vehicle", type="primary"):
+        if trip['seats'] > 0:
+            trip['seats'] -= 1
+            st.success(f"✅ Seat booked successfully! Driver {trip['driver']} has received your pickup location.")
+        else:
+            st.error("❌ Vehicle is fully booked!")
 
 with col2:
-    st.info("🏍️ *Motorbike (Ali Raza)\n *Distance from you:* 8.5 km away\n* *Speed:* 45 km/h\n* *Status:* Available (1 Seat Left)")
-    if st.button("Connect & Request Bike Ride"):
-        st.success("✅ GPS Ping Sent to Biker!")
+    st.markdown("#### 🗺️ Full Route Live Map")
+    # PyDeck Map showing the route and active vehicle
+    layer_route = pdk.Layer(
+        "LineLayer",
+        data=pd.DataFrame({'start_lat': [30.6682], 'start_lon': [73.1114], 'end_lat': [31.5204], 'end_lon': [74.3587]}),
+        get_source_position='[start_lon, start_lat]',
+        get_target_position='[end_lon, end_lat]',
+        get_color='[0, 128, 255, 200]',
+        get_width=5,
+    )
+    
+    vehicle_df = pd.DataFrame({'lat': [trip['lat']], 'lon': [trip['lon']], 'name': [trip['driver']]})
+    layer_marker = pdk.Layer(
+        "ScatterplotLayer",
+        data=vehicle_df,
+        get_position='[lon, lat]',
+        get_color='[255, 0, 0, 200]',
+        get_radius=10000,
+    )
+    
+    view_state = pdk.ViewState(latitude=31.10, longitude=73.70, zoom=7.5)
+    r = pdk.Deck(layers=[layer_route, layer_marker], initial_view_state=view_state)
+    st.pydeck_chart(r)
+
+st.divider()
+st.markdown("### 📢 Broadcast Your Request to All Route Drivers")
+with st.form("passenger_request_form"):
+    p_name = st.text_input("Your Name", "Ahmad Khan")
+    p_loc = st.text_input("Your Location on Route", "Chichawatni / Pipli Stop")
+    p_dest = st.text_input("Your Destination", "Lahore")
+    if st.form_submit_button("Broadcast to Route Drivers"):
+        st.success("✅ Broadcast sent to all active drivers on the Sahiwal-Lahore route!")
