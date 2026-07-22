@@ -2,7 +2,6 @@
 
 <div align="center">
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://ride-share-ai-rcufwxybafqe4yycpam4rf.streamlit.app/)
 [![Python Version](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/Status-Production%20Ready%20🔥-success.svg)]()
@@ -14,7 +13,7 @@
 ---
 
 ## 📌 Executive Summary
-In Pakistan, commuters traveling along major inter-city corridors (such as the *Sahiwal $\rightarrow$ Sargodha $\rightarrow$ Lahore* route) frequently encounter rigid transport schedules, high fares, and a lack of real-time visibility. *Smart Ride Connect* solves this by establishing a decentralized, two-sided marketplace. It integrates live browser geolocation sensors, PyDeck interactive mapping, multi-class vehicle profiling, and an advanced *Gemini AI Fare Optimization Engine* to connect drivers and mid-route passengers instantly.
+In Pakistan, commuters traveling along major inter-city corridors (such as the Sahiwal $\rightarrow$ Sargodha $\rightarrow$ Lahore route) frequently encounter rigid transport schedules, high fares, and a lack of real-time visibility. *Smart Ride Connect* solves this by establishing a decentralized, two-sided marketplace. It integrates live browser geolocation sensors, PyDeck interactive mapping, multi-class vehicle profiling, and an advanced Gemini AI Fare Optimization Engine to connect drivers and mid-route passengers instantly.
 
 ---
 
@@ -28,12 +27,12 @@ In Pakistan, commuters traveling along major inter-city corridors (such as the *
 
 ### 2. 🎒 Passenger Live Vehicle Radar & Auto-Matching (pages/2_Passanger_panel.py)
 * *Live GPS Device Integration:* Automatically fetches browser/device geolocation coordinates to detect users instantly.
-* *All-Fleet Route Visibility:* Allows passengers to view every active vehicle (Bikes, Cars, Vans) operating anywhere along the Sahiwal-Lahore route.
+* *All-Fleet Route Visibility:* Allows passengers to view every active vehicle (Bikes, Cars, Vans) operating anywhere along the route.
 * *Instant Seat Booking & Ping System:* Enables passengers to dispatch pickup requests directly to approaching drivers with synchronized navigation coordinates.
 
 ### 3. 🤖 Gemini AI Smart Fare & Route Estimator (pages/3_AI_Fare_Engine.py)
 * *Dynamic Pricing Algorithms:* Calculates intelligent inter-city fares based on distance benchmarks, vehicle classification, and fuel estimates.
-* *Robust Fallback Engine:* Guarantees 100% uptime with smart algorithmic heuristics even during API quota exhaustion (Rate Limit resilience).
+* *Robust Fallback Engine:* Guarantees 100% uptime with smart algorithmic heuristics even during API quota exhaustion.
 
 ---
 
