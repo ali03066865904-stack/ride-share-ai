@@ -5,6 +5,12 @@
 
 ---
 
+## 🔗 Live Deployed Application
+* *Live Working URL:* [YOUR_STREAMLIT_URL_HERE]
+* *GitHub Repository:* https://github.com/ali03066865904-stack/ride-share-ai
+
+---
+
 ## 📌 Project Overview
 In Pakistan, passengers traveling short or intermediate distances between major cities (e.g., Sargodha to Lahore on a Sahiwal-Lahore route) often face high fares or lack of available transport. 
 
@@ -12,15 +18,22 @@ In Pakistan, passengers traveling short or intermediate distances between major 
 
 ---
 
-## ✨ Features & Functionality
-1. *Dual Simulator Layout:* Dedicated panels for Driver (Trip publishing & GPS toggle) and Passenger (Seat discovery & booking).
-2. *Dynamic Mid-Route Waypoint Matching:* Mid-route travelers can book remaining seats dynamically.
-3. *Multi-Vehicle Fleet:* Supports Bikes, Cars, Carry Dabbas, Hiace Vans, and Buses.
-4. *Bilingual UI:* Clean interface in English & Urdu for complete accessibility.
-5. *AI Route & Fare Advisor:* Uses Gemini 2.0 Flash model to recommend fair per-seat pricing and route safety tips.
+## 📁 Repository & File Architecture (Enterprise Modular Design)
+This repository is built using Streamlit's official *Multi-Page Application Framework*, structured across 10 modular files:
 
----
-
-## 🤖 AI System Prompt
 ```text
-You are a smart Pakistani Ride-Share Assistant. Calculate estimated fare (in PKR) and route advice from starting point to destination for selected vehicle category. Consider approximate distance, current fuel prices in Pakistan, highway safety tips, and comfort
+ride-share-ai/
+├── .streamlit/
+│   └── config.toml             # Custom UI Theme Configuration
+├── pages/
+│   ├── 1_👨‍✈️_Driver_Panel.py    # Driver Dashboard & Route Publisher
+│   ├── 2_🎒_Passenger_Panel.py # Dynamic Mid-Route Seat Booking
+│   └── 3_🤖_AI_Fare_Engine.py   # Gemini 2.0 AI Advisor Module
+├── data/
+│   └── sample_routes.json      # Mock Dataset for Active Pakistani Routes
+├── utils/
+│   ├── fare_calculator.py      # Rule-Based Fare Logic & Mileage Calculator
+│   └── ai_helper.py            # Google GenAI API Integration Wrapper
+├── Home.py                     # Main Landing Page & Dashboard
+├── README.md                   # Comprehensive Project Report
+└── requirements.txt            # Project Python Dependencies
