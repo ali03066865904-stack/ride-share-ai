@@ -1,0 +1,24 @@
+[
+  {
+    "id": "RIDE-101",
+    "driver": "Muhammad Saleem",
+    "phone": "0300-1234567",
+    "vehicle": "Car / کار",
+    "from_city": "Sahiwal",
+    "via_stop": "Sargodha",
+    "to_city": "Lahore",
+    "seats_available": 2,
+    "fare_pkr": 1200
+  },
+  {
+    "id": "RIDE-102",
+    "driver": "Tariq Mahmood",
+    "phone": "0321-7654321",
+    "vehicle": "Hiace / ہائی ایس",
+    "from_city": "Multan",
+    "via_stop": "Sahiwal",
+    "to_city": "Lahore",
+    "seats_available": 8,
+    "fare_pkr": 800
+  }
+]
