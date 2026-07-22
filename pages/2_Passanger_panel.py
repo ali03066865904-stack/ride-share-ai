@@ -1,53 +1,68 @@
 import streamlit as st
-import pandas as pd
+import streamlit.components.v1 as components
 
-st.set_page_config(page_title="Passenger & Mid-Route Matching", page_icon="🎒", layout="wide")
+st.set_page_config(page_title="Live GPS Passenger Panel", page_icon="🎒", layout="wide")
 
-st.title("🎒 Passenger Booking & Ride Matching Engine")
-st.subheader("Search running vehicles or broadcast your pickup request along the route")
+st.title("🎒 Passenger Live GPS Radar & Auto-Matching")
+st.subheader("Automatic GPS Detection — Find nearby drivers within your 15km radius instantly.")
 
-# Session state initialization for requests
-if 'passenger_requests' not in st.session_state:
-    st.session_state.passenger_requests = [
-        {"name": "Ali Raza", "pickup": "Sahiwal Bypass", "destination": "Lahore", "seats": 1, "status": "Looking for Ride 🟡"}
-    ]
+# JavaScript component to fetch real device/browser GPS coordinates automatically
+st.markdown("### 📍 Your Live GPS Coordinates (Auto-Detected)")
 
-if 'rides' not in st.session_state:
-    st.session_state.rides = [
-        {"id": "RIDE-101", "driver": "Muhammad Saleem", "phone": "0300-1234567", "vehicle": "Car 🚗", "origin": "Sahiwal", "destination": "Lahore", "seats": 2, "fare": 1200}
-    ]
+geo_script = """
+<div id="demo">Click the button below to fetch your live GPS location:</div>
+<button onclick="getLocation()" style="background-color:#2563EB; color:white; padding:10px 20px; border:none; border-radius:5px; cursor:pointer; font-weight:bold;">🛰️ Fetch My Live GPS Location</button>
 
-tab1, tab2 = st.tabs(["🔍 Search Active Vehicles", "📢 Broadcast My Pickup Request (Passenger to Driver)"])
+<script>
+var x = document.getElementById("demo");
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition, showError);
+  } else {
+    x.innerHTML = "Geolocation is not supported by this browser.";
+  }
+}
 
-with tab1:
-    st.markdown("### Active Inter-City & Mid-Route Vehicles")
-    for r in st.session_state.rides:
-        st.info(f"🚗 *{r['vehicle']}* | Driver: {r['driver']} ({r['phone']}) | Route: {r['origin']} ➔ {r['destination']} | Seats Left: {r['seats']} | Fare: PKR {r['fare']}")
-        if st.button(f"Book Seat ({r['id']})", key=r['id']):
-            if r['seats'] > 0:
-                r['seats'] -= 1
-                st.success(f"✅ Seat booked successfully on {r['vehicle']}!")
-            else:
-                st.error("❌ No seats available!")
+function showPosition(position) {
+  x.innerHTML = "<b>Latitude:</b> " + position.coords.latitude + 
+                "<br><b>Longitude:</b> " + position.coords.longitude + 
+                " <span style='color:green; font-weight:bold;'>✔️ GPS Active & Locked!</span>";
+}
 
-with tab2:
-    st.markdown("### 📢 Passenger Ride Request Broadcast")
-    st.write("Are you waiting mid-route (e.g., 10-15km away)? Broadcast your pickup request so passing drivers can accept you!")
-    
-    with st.form("passenger_broadcast_form"):
-        p_name = st.text_input("Your Full Name", "Ahmad Khan")
-        p_phone = st.text_input("Your Phone Number", "0301-9876543")
-        p_pickup = st.text_input("Your Current Location / Pickup Point", "Chichawatni Interchange (15km from Sahiwal)")
-        p_dest = st.selectbox("Your Destination City", ["Lahore", "Multan", "Faisalabad", "Rawalpindi"])
-        p_seats = st.slider("Required Seats", 1, 4, 1)
-        
-        submitted = st.form_submit_button("🚀 Broadcast Request to Nearby Drivers")
-        if submitted:
-            new_req = {"name": p_name, "pickup": p_pickup, "destination": p_dest, "seats": p_seats, "status": "Pending Driver Acceptance 🟡"}
-            st.session_state.passenger_requests.append(new_req)
-            st.success("✅ Broadcast Sent! Nearby drivers on this route will now see your request on their dashboard.")
+function showError(error) {
+  switch(error.code) {
+    case error.PERMISSION_DENIED:
+      x.innerHTML = "User denied the request for Geolocation.";
+      break;
+    case error.POSITION_UNAVAILABLE:
+      x.innerHTML = "Location information is unavailable.";
+      break;
+    case error.TIMEOUT:
+      x.innerHTML = "The request to get user location timed out.";
+      break;
+    case error.UNKNOWN_ERROR:
+      x.innerHTML = "An unknown error occurred.";
+      break;
+  }
+}
+</script>
+"""
+components.html(geo_script, height=120)
 
 st.divider()
-st.markdown("### 📋 Live Requests Board")
-df_reqs = pd.DataFrame(st.session_state.passenger_requests)
-st.dataframe(df_reqs, use_container_width=True)
+
+st.markdown("### 🚗 Nearby Drivers Live Radar (Auto-Matched)")
+st.info("📡 GPS Radar Active: Scanning Sahiwal ➔ Sargodha ➔ Lahore Route...")
+
+# Simulated auto-detected live matching vehicles
+col1, col2 = st.columns(2)
+with col1:
+    st.success("🚗 *Car (Muhammad Saleem)\n *Distance from you:* 3.2 km away\n* *Speed:* 65 km/h (Approaching)\n* *Status:* Available (2 Seats Left)")
+    if st.button("Connect & Request Pickup"):
+        st.balloons()
+        st.success("✅ GPS Ping Sent to Driver! Driver's navigation updated with your live coordinates.")
+
+with col2:
+    st.info("🏍️ *Motorbike (Ali Raza)\n *Distance from you:* 8.5 km away\n* *Speed:* 45 km/h\n* *Status:* Available (1 Seat Left)")
+    if st.button("Connect & Request Bike Ride"):
+        st.success("✅ GPS Ping Sent to Biker!")
