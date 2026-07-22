@@ -22,7 +22,7 @@
 ---
 
 ## 🔗 2. Live Deployed Application & Repository
-* *Live Working URL (Clickable):* [Access Streamlit Production App](https://ride-share-ai-rcufwxybafqe4yycpam4rf.streamlit.app/)
+* *Live Working URL (Clickable):* https://ride-share-ai-rcufwxvbafqe4yycpam4r7.streamlit.app/
 * *GitHub Repository:* [View GitHub Source Code](https://github.com/ali03066865904-stack/ride-share-ai)
 
 ---
