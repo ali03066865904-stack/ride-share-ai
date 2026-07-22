@@ -6,7 +6,7 @@
 ---
 
 ## 🔗 Live Deployed Application
-* *Live Working URL:* [YOUR_STREAMLIT_URL_HERE]
+* *Live Working URL:* https://ride-share-ai-rcufwxvbafqe4yycpam4r7.streamlit.app/
 * *GitHub Repository:* https://github.com/ali03066865904-stack/ride-share-ai
 
 ---
