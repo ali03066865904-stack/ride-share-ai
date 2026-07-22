@@ -83,7 +83,7 @@ with tab3:
                 Keep the response concise and clear.
                 """
                 response = client.models.generate_content(
-                    model='gemini-2.5-flash',
+                    model='gemini-1.5-flash',
                     contents=prompt
                 )
                 st.markdown("### 📊 AI Estimation Results")
